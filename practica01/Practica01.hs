@@ -6,7 +6,7 @@ module Practica01 where
 --1
 --primitivo. Función que recibe un entero y devuelve su primitivo.
 primitivo :: Int -> Int
-primitivo n = error "Sin implementar."
+primitivo n = 0
 
 --2
 --area. Función que recibe tres puntos y devuelve el área del 
@@ -23,8 +23,24 @@ heterograma s = error "Sin implementar."
 --4
 --bolsa. Función que recibe una cadena y devuelve una lista de tuplas
 --       con el número de ocurrencias de cada letra de la palabra.
-bolsa :: Eq a => String -> [(Char, Int)]
-bolsa s = error "Sin implementar."
+bolsa :: String -> [(Char, Int)]
+bolsa [] = []
+bolsa (x:xs) = [(x,apariciones x (x:xs))] ++ bolsa (quita x xs)
+
+--Auxiliar, elimina todas las apariciones de un elemento de una lista
+quita :: Eq a => a -> [a] -> [a]
+quita a [] = []
+quita a (x:xs) = if a == x then quita a xs else [x] ++ quita a xs  
+
+--Auxiliar, nos dice si un elemento esta en una lista
+esta :: Eq a => a -> [a] -> Bool
+esta _ [] = False
+esta y (x:xs) = y==x || esta y xs   
+
+--Auxiliar, nos dice el numero de apariciones de un elemento en una lista
+apariciones :: Eq a => a -> [a] -> Int
+apariciones a [] = 0
+apariciones a (x:xs) = if a == x then 1 + apariciones a xs else 0 + apariciones a xs
 
 --5
 --esPalindromo. Función que verifica si una cadena es palíndromo.
@@ -51,7 +67,7 @@ data Binario = U | Cero Binario | Uno Binario
 --8
 --Instancia de la clase Show para Binario.
 instance Show Binario where
-	show b = error "Sin implementar."
+show b = error "Sin implementar."
 
 --9
 --suma. Función que devuelve la suma de dos Binarios.
