@@ -1,69 +1,69 @@
---
---
---
+-- *Nombre del equipo/alumno*
+-- *Práctica*
 
 module Practica01 where 
 
+--primitivo. Función que recibe un entero y devuelve su primitivo.
 primitivo :: Int -> Int
 primitivo n = error "Sin implementar."
 
+
+--area. Función que recibe tres puntos y devuelve el área del 
+--      triángulo formado.
 area :: (Double, Double) -> (Double, Double) -> (Double, Double) -> Double
 area v1 v2 v3 = error "Sin implementar."
 
-heterograma :: String -> Bool
-heterograma [] = []
-heterograma (x:xs) = if (elem x xs) then (heterograma xs)
-                                   else x:(heterograma xs)
+
+--heterograma. Función que recibe una cadena y lo convierte en un
+--             heterograma.
+heterograma :: String -> String
+heterograma s = error "Sin implementar."
 
 
-bolsa :: Eq a => String -> [(a, b)]
+--bolsa. Función que recibe una cadena y devuelve una lista de tuplas
+--       con el número de ocurrencias de cada letra de la palabra.
+bolsa :: Eq a => String -> [(Char, Int)]
 bolsa s = error "Sin implementar."
 
-esPalindromo :: String -> Bool
-esPalindromo s = if s == reversa s then True else False
 
-reversa :: String -> String
-reversa [] = []
-reversa (x:xs) = reversa xs ++ [x]
+--esPalindromo. Función que verifica si una cadena es palíndromo.
+esPalindromo :: Eq a => [a] -> Bool
+esPalindromo s = error "Sin implementar."
 
 
-
-remove :: Eq a => a -> [a] -> [a]
-remove x [] = []
-remove x (y:ys) = if x == y then remove x ys
-                                 else y:(remove x ys)
-
-(\\) :: Eq a => [a] -> [a] -> [a]
-(\\) x [] = x
-(\\) xs (y:ys) = if (elem y xs) then (remove y xs) \\ ys
-                                     else xs \\ ys 
+--diferencia. Función que devuelve una lista con la diferencia entre
+--            dos listas.
+diferencia :: Eq a => [a] -> [a] -> [a]
+diferencia l1 l2 = error "Sin implementar."
 
 
+--primos. Función que devuelve una lista con todos los números primos
+--        hasta n.
 primos :: Int -> [Int]
-primos n = [x | x <- [2..n], primo x]
-
-primo :: Int -> Bool
-primo n = factores n == [1, n]
-
-factores :: Int -> [Int]
-factores n = [x | x <- [1..n], n `mod` x == 0]
+primos n = error "Sin implementar."
 
 
+
+{-- Definición de Binario.--}
 data Binario = U | Cero Binario | Uno Binario
 
+
+--Instancia de la clase Show para Binario.
 instance Show Binario where
-    show U = "1"
-    show (Cero b) = show b ++ "0"
-    show (Uno b) = show b ++ "1"
+	show b = error "Sin implementar."
 
+
+--suma. Función que devuelve la suma de dos Binarios.
 suma :: Binario -> Binario -> Binario
-suma U U = (Cero U)
---suma (Cero b1) (Cero b2) = (Cero suma (b1 b2))
---suma (Uno b1) (Uno b1) =  (Cero (suma (suma (U b1)) b2))
+suma b1 b2 = error "Sin implementar."
 
 
+
+{-- Definición del Árbol binario.--}
 data Arbol a = Vacio | Nodo a (Arbol a) (Arbol a) deriving(Show)
 
+
+--inOrden. Función que convierte un árbol binario en una lista por
+--         su recorrido in-orden.
 inOrden :: Arbol a -> [a]
-inOrden Vacio = []
-inOrden (Nodo r i d) = inOrden i ++ [r] ++ inOrden d
+inOrden t = error "Sin implementar."
