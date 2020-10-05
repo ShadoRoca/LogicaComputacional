@@ -5,8 +5,9 @@ module Practica01 where
 
 --1
 --primitivo. Función que recibe un entero y devuelve su primitivo.
+--Ocupamos las operaciones mod y div para dividir los números en digitos
 primitivo :: Int -> Int
-primitivo n = 0
+primitivo n = if n < 10 then n else primitivo((n `mod` 10)* primitivo(n `div` 10)) 
 
 --2
 --area. Función que recibe tres puntos y devuelve el área del 
@@ -18,8 +19,8 @@ area v1 v2 v3 = error "Sin implementar."
 --heterograma. Función que recibe una cadena y lo convierte en un
 --             heterograma.
 heterograma :: String -> String
-heterograma s = error "Sin implementar."
-
+heterograma [] = []
+heterograma (x:xs) = if esta x xs then [x] ++ heterograma(quita x xs) else [x] ++ heterograma xs 
 --4
 --bolsa. Función que recibe una cadena y devuelve una lista de tuplas
 --       con el número de ocurrencias de cada letra de la palabra.
@@ -45,7 +46,12 @@ apariciones a (x:xs) = if a == x then 1 + apariciones a xs else 0 + apariciones 
 --5
 --esPalindromo. Función que verifica si una cadena es palíndromo.
 esPalindromo :: Eq a => [a] -> Bool
-esPalindromo s = error "Sin implementar."
+esPalindromo s = if(s) == reversa s then True else False
+
+--Auxiliar, regresa la reversa de una lista
+reversa :: Eq a => [a] -> [a]
+reversa [] = []
+reversa (x:xs) = reversa xs ++ [x]
 
 --6
 --diferencia. Función que devuelve una lista con la diferencia entre
@@ -57,8 +63,7 @@ diferencia l1 l2 = error "Sin implementar."
 --primos. Función que devuelve una lista con todos los números primos
 --        hasta n.
 primos :: Int -> [Int]
-primos n = error "Sin implementar."
-
+primos n = []
 
 
 {-- Definición de Binario.--}
