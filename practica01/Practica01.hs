@@ -1,7 +1,7 @@
--- *Nombre del equipo/alumno*
---
+-- *Nombre del equipo: Paradojas*
+--Liprandi Cortes Rodrigo 317275605
 --Tinoco Miguel Laura Itzel 316020189
--- *Práctica*
+-- *Práctica 01*
 
 module Practica01 where 
 
