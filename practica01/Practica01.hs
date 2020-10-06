@@ -21,6 +21,7 @@ area v1 v2 v3 = error "Sin implementar."
 heterograma :: String -> String
 heterograma [] = []
 heterograma (x:xs) = if esta x xs then [x] ++ heterograma(quita x xs) else [x] ++ heterograma xs 
+
 --4
 --bolsa. Función que recibe una cadena y devuelve una lista de tuplas
 --       con el número de ocurrencias de cada letra de la palabra.
@@ -63,23 +64,34 @@ diferencia l1 l2 = error "Sin implementar."
 --primos. Función que devuelve una lista con todos los números primos
 --        hasta n.
 primos :: Int -> [Int]
-primos n = []
+primos n = criba[2..n]
 
+--Auxiliar, método de criba para encontrar números primos
+--Fuente: https://es.wikipedia.org/wiki/Criba_de_Erat%C3%B3stenes
+criba :: [Int] -> [Int]
+criba [] = []
+criba (x:xs) = [x] ++ criba [y | y <- xs, (y `mod` x) /= 0]
 
 {-- Definición de Binario.--}
-data Binario = U | Cero Binario | Uno Binario
+data Binario = U | Cero Binario | Uno Binario deriving(Show)
 
 --8
 --Instancia de la clase Show para Binario.
 instance Show Binario where
-show b = error "Sin implementar."
+	show b = error "Sin implementar."
 
 --9
 --suma. Función que devuelve la suma de dos Binarios.
 suma :: Binario -> Binario -> Binario
-suma b1 b2 = error "Sin implementar."
-
-
+suma U U = (Cero U)
+suma U (Cero b) = (Uno b)
+suma (Cero b) U = (Uno b)
+suma U (Uno b) = (Cero (suma U (b)))
+suma (Uno b) U = (Cero (suma U (b)))
+suma (Uno b1) (Uno b2) = (Cero (suma U (suma b1 b2)))
+suma (Cero  b1) (Cero b2) = (Cero (suma b1 b2))
+suma (Cero b1) (Uno b2) = (Uno (suma b1 b2))
+suma (Uno b1) (Cero b2) = (Uno (suma b1 b2))
 
 {-- Definición del Árbol binario.--}
 data Arbol a = Vacio | Nodo a (Arbol a) (Arbol a) deriving(Show)
