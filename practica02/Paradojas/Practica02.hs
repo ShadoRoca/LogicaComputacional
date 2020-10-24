@@ -97,6 +97,7 @@ equiv p1 p2 = if (diferencia (modelos p1) (modelos p2)) == [] then True else Fal
 
 --Auxiliar para equiv, si ambas proposiciones son satisfacidas por los mismo modelos entonces la diferencia
 --de las listas de sus modelos es igual a [], si no entonces no son satisfacidas por los mismos modelos
+-- y por lo tanto no son equivalentes
 diferencia :: Eq a => [a] -> [a] -> [a]
 diferencia [] xs = []
 diferencia (x:xs) ys = if esta x ys
@@ -109,7 +110,13 @@ elimEquiv p = error "Sin implementar."
 
 --13. elimImpl. Función que elimina las implicaciones lógicas.
 elimImpl :: Prop -> Prop
-elimImpl p = error "Sin implementar."
+elimImpl PTrue = PTrue
+elimImpl PFalse = PFalse
+elimImpl (PVar p) = (PVar p)
+elimImpl (POr p q) = (POr (elimImpl p) (elimImpl q))
+elimImpl (PAnd p q) = (PAnd (elimImpl p)(elimImpl q))
+elimImpl (PImpl p q) = (POr (PNeg (elimImpl p)) (elimImpl q))
+elimImpl (PEquiv p q) = (PEquiv (elimImpl p)(elimImpl q))
 
 --14. deMorgan. Función que aplica las leyes de DeMorgan a una proposición.
 deMorgan :: Prop -> Prop
