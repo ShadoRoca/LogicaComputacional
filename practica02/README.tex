@@ -1,0 +1,31 @@
+\documentclass[]{article}
+
+%opening
+\title{README \\ PR\'ACTICA 02}
+\author{Liprandi Cortes Rodrigo: 317275605 \\ Tinoco Miguel Laura Itzel: 316020189}
+
+\begin{document}
+
+\maketitle
+
+
+\section{Observaciones:}
+	\begin{itemize}
+		\item \textbf{esta}: Funci\'on auxiliar que nos dice si un elemento esta contenido en una lista.\\
+		 esta :: Eq a $=>$ a -$>$ [a] -$>$ Bool
+		 
+		 \item \textbf{modelosAux}: Funci\'on auxiliar que si un estado de todos los posibles estados de p satisfacen a p, entonces lo agrega a una lista.\\
+		 modelosAux :: [[String]] -$>$ Prop -$>$ [Estado]
+		 
+		 \item \textbf{andM}: Funci\'on que dada una lista de valores booleanos devuelve true si todos son true, false si alguno de esos valores es false, es decir hace una conjunción con todos los booleanos de la lista.\\
+		 andM :: [Bool] -$>$ Bool
+		 
+		 \item \textbf{orM}: Funci\'on que dada una lista de valores booleanos devuelve true si alguno de los valores es true, false si todos los valores son false, es decir hace una disyunción con todos los booleanos de la lista.\\
+		 orM :: [Bool] -$>$ Bool
+		 
+		 \item \textbf{diferencia}: Funci\'on auxiliar en donde si ambas proposiciones son satisfacidas por los mismo modelos entonces la diferencia
+		 de las listas de sus modelos es igual a [], si no entonces no son satisfacidas por los mismos modelos y por lo tanto no son equivalentes.\\
+		 diferencia :: Eq a $=>$ [a] -$>$ [a] -$>$ [a]
+	\end{itemize}
+
+\end{document}

@@ -158,25 +158,3 @@ deMorgan (PNeg (POr a b)) = (PAnd (PNeg a) (PNeg b))
 deMorgan (PNeg (PAnd a b)) = (POr (PNeg a) (PNeg b))
 deMorgan p = p
 
-
-{-- Punto extra--}
-{--
-estadosConj :: [Prop] -> [Estado]
-modelosConj :: [Prop] -> [Estado]
-satisfenConj:: Estado -> [Prop] -> Bool
-satisfConj:: [Prop] -> Bool
-insatisfenConj:: Estado -> [Prop] -> Bool
-insatisfConj:: [Prop] -> Bool
-
---consecuencia. Función que determina si una proposición es consecuencia
---				del conjunto de premisas.
-consecuencia: [Prop] -> Prop -> Bool
-consecuencia gamma phi = null [i | i <- estadosConj (phi : gamma),
-								satisfenConj i gamma,
-								not (satisfen i phi)]
-
---argCorrecto. Función que determina si un argumento es lógicamente
---				correcto dadas las premisas.
-argCorrecto :: [Prop] -> Prop -> Bool
-argCorrecto gamma psi = consecuencia gamma psi
---}
