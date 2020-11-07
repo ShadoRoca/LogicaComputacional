@@ -66,6 +66,7 @@ subconj :: [a] -> [[a]]
 subconj [] = [[]]
 subconj (x:xs) = subconj xs ++ [(x:z) | z <- subconj xs]
 
+--QUITAR DUPLICADOS
 --5. 
 --modelos. Función que devuelve la lista de todos los modelos posibles
 -- 	   para una proposición.
@@ -128,6 +129,8 @@ diferencia (x:xs) ys = if esta x ys
                        then diferencia xs ys
                        else (x:(diferencia xs ys))
 
+
+--CASOS DE LAS NEGACIONES
 --12.
 --elimEquiv. Función que elimina las equivalencias lógicas.
 elimEquiv :: Prop -> Prop
@@ -139,7 +142,7 @@ elimEquiv (PAnd p q) = (PAnd (elimEquiv p) (elimEquiv q))
 elimEquiv (PImpl p q) = (PImpl (elimEquiv p) (elimEquiv q))
 elimEquiv (PEquiv p q) = (PAnd (PImpl (elimEquiv p) (elimEquiv q)) (PImpl (elimEquiv q) (elimEquiv p)))
 
-
+--CASOS DE LAS NEGACIONES
 --13. 
 --elimImpl. Función que elimina las implicaciones lógicas.
 elimImpl :: Prop -> Prop
@@ -151,6 +154,8 @@ elimImpl (PAnd p q) = (PAnd (elimImpl p)(elimImpl q))
 elimImpl (PImpl p q) = (POr (PNeg (elimImpl p)) (elimImpl q))
 elimImpl (PEquiv p q) = (PEquiv (elimImpl p)(elimImpl q))
 
+
+--RECURSION SOBRE A Y B
 --14.
 --deMorgan. Función que aplica las leyes de DeMorgan a una proposición.
 deMorgan :: Prop -> Prop
