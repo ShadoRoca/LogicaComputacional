@@ -5,6 +5,8 @@
 
 module Practica02 where
 
+import Data.List
+
 --Prop. Tipo de datos para proposiciones lógicas.
 data Prop = PTrue | PFalse | PVar String | PNeg Prop | POr Prop Prop 
                   | PAnd Prop Prop | PImpl Prop Prop | PEquiv Prop Prop
@@ -41,6 +43,15 @@ esta :: Eq a => a -> [a] -> Bool
 esta _ [] = False
 esta y (x:xs) = y==x || esta y xs
 
+--Auxiliar, nos dice si dos listas son iguales por sus elementos
+equalListA :: (Eq a) => [a] -> [a] -> Bool
+equalListA x y = null (x \\ y) && null (y \\ x)
+
+--
+contieneEstado :: Estado -> [Estado] -> Bool
+contieneEstado _ [] = False
+contieneEstado y (x:xs) = equalListA y x || contieneEstado y xs
+
 --2. 
 --estados. Función que devuelve una lista de todas las combinaciones
 --         posibles de los estados de una proposición.
@@ -71,12 +82,24 @@ subconj (x:xs) = subconj xs ++ [(x:z) | z <- subconj xs]
 --modelos. Función que devuelve la lista de todos los modelos posibles
 -- 	   para una proposición.
 modelos :: Prop -> [Estado]
-modelos p = modelosAux (subconj(vars p)) p
+modelos p = conjuntoEstados(modelosAux (subconj(vars p)) p)
 
---Auxiliar para modelos, si un estado de todos los posibles estados de p satisfacen a p, entonces lo agrega a una lista 
+aConjunto :: Eq a => [a] -> [a]
+aConjunto [] = []
+aConjunto (x:xs) = if esta x xs
+                   then aConjunto xs
+                   else (x:(aConjunto xs))
+
+conjuntoEstados :: [Estado] -> [Estado]
+conjuntoEstados [] = []
+conjuntoEstados (x:xs) = if contieneEstado x xs
+                         then conjuntoEstados xs
+                         else (x:(conjuntoEstados xs))
+
+--Auxiliar para modelos, si un estado de todos los posibles estados de p satisface a p, entonces lo agrega a una lista 
 modelosAux :: [[String]] -> Prop -> [Estado]
 modelosAux [] p = []
-modelosAux (x:xs) p = if (interp x p) then [x] ++ modelosAux xs p else modelosAux xs p
+modelosAux (x:xs) p = if (interp x p) then (aConjunto [x]) ++ modelosAux xs p else modelosAux xs p
 
 --6.
 --tautologia. Función que dice si una proposición es tautología.
@@ -129,6 +152,23 @@ diferencia (x:xs) ys = if esta x ys
                        then diferencia xs ys
                        else (x:(diferencia xs ys))
 
+simplificaNeg :: Prop -> Prop
+simplificaNeg (PNeg (PTrue)) = PFalse
+simplificaNeg (PNeg (PFalse)) = PTrue
+simplificaNeg (PNeg (PVar p)) = (PNeg (PVar p))
+simplificaNeg (PNeg (PNeg p)) = simplificaNeg p
+simplificaNeg (PNeg (POr p q)) = simplificaNeg (deMorgan (PNeg (POr p q)))
+simplificaNeg (PNeg (PAnd p q)) = simplificaNeg (deMorgan (PNeg (PAnd p q)))
+simplificaNeg (PNeg (PImpl p q)) = simplificaNeg (PAnd p (PNeg q))
+simplificaNeg (PNeg (PEquiv p q)) = simplificaNeg (PEquiv (PNeg p)(q))
+simplificaNeg (PTrue) = PTrue
+simplificaNeg (PFalse) = PFalse
+simplificaNeg (PVar p) = PVar p
+simplificaNeg (PNeg p) = simplificaNeg (PNeg(simplificaNeg p))
+simplificaNeg (POr p q) = POr (simplificaNeg p) (simplificaNeg q)
+simplificaNeg (PAnd p q) = PAnd (simplificaNeg p) (simplificaNeg q)
+simplificaNeg (PImpl p q) = PImpl (simplificaNeg p) (simplificaNeg q)
+simplificaNeg (PEquiv p q) = PEquiv (simplificaNeg p) (simplificaNeg q)
 
 --CASOS DE LAS NEGACIONES
 --12.
@@ -136,7 +176,8 @@ diferencia (x:xs) ys = if esta x ys
 elimEquiv :: Prop -> Prop
 elimEquiv PTrue = PTrue
 elimEquiv PFalse = PFalse
-elimEquiv (PVar p) = (PVar p)
+elimEquiv (PVar p) = (PVar p) 
+elimEquiv (PNeg p) = (PNeg (elimEquiv p))
 elimEquiv (POr p q) = (POr (elimEquiv p) (elimEquiv q))
 elimEquiv (PAnd p q) = (PAnd (elimEquiv p) (elimEquiv q))
 elimEquiv (PImpl p q) = (PImpl (elimEquiv p) (elimEquiv q))
@@ -149,6 +190,7 @@ elimImpl :: Prop -> Prop
 elimImpl PTrue = PTrue
 elimImpl PFalse = PFalse
 elimImpl (PVar p) = (PVar p)
+elimImpl (PNeg p) = (PNeg (elimImpl p))
 elimImpl (POr p q) = (POr (elimImpl p) (elimImpl q))
 elimImpl (PAnd p q) = (PAnd (elimImpl p)(elimImpl q))
 elimImpl (PImpl p q) = (POr (PNeg (elimImpl p)) (elimImpl q))
@@ -159,7 +201,7 @@ elimImpl (PEquiv p q) = (PEquiv (elimImpl p)(elimImpl q))
 --14.
 --deMorgan. Función que aplica las leyes de DeMorgan a una proposición.
 deMorgan :: Prop -> Prop
-deMorgan (PNeg (POr a b)) = (PAnd (PNeg a) (PNeg b))
-deMorgan (PNeg (PAnd a b)) = (POr (PNeg a) (PNeg b))
+deMorgan (PNeg (POr a b)) = (PAnd (deMorgan(PNeg a)) (deMorgan(PNeg b)))
+deMorgan (PNeg (PAnd a b)) = (POr (deMorgan(PNeg a)) (deMorgan(PNeg b)))
 deMorgan p = p
 
