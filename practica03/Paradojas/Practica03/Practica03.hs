@@ -1,11 +1,11 @@
---
---
---
+-- *Nombre del equipo: Paradojas*
+--Liprandi Cortes Rodrigo 317275605
+--Tinoco Miguel Laura Itzel 316020189
+-- *Práctica 03*
+
 module Practica03 where
 
 import Practica02
-
-
 
 {----- Formas Normales -----}
 
@@ -18,8 +18,6 @@ fnn p = simplificaNeg(elimImpl(elimEquiv p))
 --         proposición.
 fnc :: Prop -> Prop
 fnc p = error "Sin implementar."
-
-
 
 {----- Algoritmo DPLL -----}
 
@@ -68,17 +66,24 @@ elim (m, f) = error "Sin implementar."
 ----------------------------------------------------------------------------------------------------------------------
 
 --Auxiliar. Elimina una literal de una clausula.
+--Como no queremos una clausula vacia, (conflict no checa si hay clausulas vacias), entonces si la
+--clausula sólo tiene una literal, regresamos la misma clausula 
 elimLiteral :: Literal -> Clausula -> Clausula
 elimLiteral p [] = []
+elimLiteral p [x] = [x]
 elimLiteral p (x:xs) = if p == x then elimLiteral p xs else [x] ++ (elimLiteral p xs) 
 
 --Auxiliar para red. Dada una literal y una fórmula, quita la contraria de la literal de todas las
 --clausulas de la fórmula.
 redAux :: Literal -> [Clausula] -> [Clausula]
 redAux p [] = []
-redAux p (x:xs) = if ((length x) > 1) && (esta (simplificaNeg(PNeg p)) x) then [elimLiteral (simplificaNeg(PNeg p)) x] ++ (redAux p xs) else [x] ++ (redAux p xs)
+redAux p (x:xs) = if ((length x) > 1) && (esta (simplificaNeg(PNeg p)) x) 
+                    then [elimLiteral (simplificaNeg(PNeg p)) x] ++ (redAux p xs) 
+                  else [x] ++ (redAux p xs)
 
 -- 5. red. Función que aplica la regla de reducción.
+-- Usando los auxiliares, si la negación de la cabeza del modelo está en alguna clausula que tenga más
+-- de una literal, entonces la eliminamos de esa clausula.
 red :: Solucion -> Solucion
 red (m, []) = (m,[])
 red ([], ys) = ([], ys)
@@ -90,16 +95,21 @@ split :: Solucion -> [Solucion]
 split (m, f) = error "Sin implementar."
 
 -- 7. conflict. Función que determina si la Solucion llegó a una contradicción.
+-- Checamos en cada clausula: si la clausula sólo tiene una literal y esta es la negación de la cabeza
+--                            del modelo, entonces regresamos True.
 conflict :: Solucion -> Bool
-conflict (m, f) = error "sin impl"
+conflict (m, []) = False
+conflict ([], f) = False
+conflict ((x:xs), (y:ys)) = ((length y) == 1) && (esta (simplificaNeg(PNeg x)) y) || conflict ((x:xs), ys) 
 
 -- 8. success. Función que determina si la fórmula es satisfacible.
 success :: Solucion -> Bool
 success (m, f) = error "Sin implementar."
 
 --9. appDPLL. Función que aplica las reglas anteriores una vez.
+--Primero se aplica unit, despues elim y por ultimo red.
 appDPLL :: Solucion -> Solucion
-appDPLL (m, f) = error "Sin implementar."
+appDPLL (m, f) = red (elim (unit((m,f))))
 
 
 
