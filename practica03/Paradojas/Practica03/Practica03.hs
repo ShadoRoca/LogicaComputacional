@@ -37,54 +37,57 @@ uneAux xs (m,ys) = (m, ys ++ xs)
 -- 3. unit. Función que aplica la regla unitaria.
 unit :: Solucion -> Solucion
 unit (m, []) = (m,[])
-unit (m, ((x:xs):ys)) = if length (x:xs) == 1 then unit (aConjunto(m ++ [x]), ys) else uneAux [(x:xs)] (unit (aConjunto(m),ys))
+unit (m, ((x:xs):ys)) = if length (x:xs) == 1 then (aConjunto([x] ++ m), ys) else uneAux [(x:xs)] (unit (aConjunto(m),ys))
 
 -- 4. elim. Función que aplica la regla de eliminación. 
 elim :: Solucion -> Solucion
 elim (m, f) = error "Sin implementar."
 
+-------------------------------------------------------------------------------------------------------------------
 --Auxilar para Red. Elimina una literal de una clausula si contiene la negación de esta.
-redAux :: Literal -> Clausula -> Clausula
-redAux p [] = []
-redAux p (x:xs) = if x == simplificaNeg(PNeg p) then redAux p xs else ([x] ++ (redAux p xs))
+--redAux :: Literal -> Clausula -> Clausula
+--redAux p [] = []
+--redAux p (x:xs) = if x == simplificaNeg(PNeg p) then redAux p xs else ([x] ++ (redAux p xs))
 
 --Auxiliar, usamos redAux para eliminar la contraria de una literal de una formula
-redAux2 :: Literal -> [Clausula] -> [Clausula]
-redAux2 x [] = []
-redAux2 x (y:ys) = [redAux x y] ++ (redAux2 x ys)
+--redAux2 :: Literal -> [Clausula] -> [Clausula]
+--redAux2 x [] = []
+--redAux2 x (y:ys) = [redAux x y] ++ (redAux2 x ys)
 
 --Auxiliar, se usan nuestros dos auxiliares anteriores para lograr eliminar las contrarias de
 -- una lista de literares en una lista de clausulas
-redAux3 :: [Literal] -> [Clausula] -> [Clausula]
-redAux3 [] [] = []
-redAux3 [] ys = []
-redAux3 xs [] = []
-redAux3 (x:xs) (y:ys) = [redAux x y] ++ (redAux2 x ys) ++ (redAux3 xs ys)
+--redAux3 :: [Literal] -> [Clausula] -> [Clausula]
+--redAux3 [] [] = []
+--redAux3 [] ys = []
+--redAux3 xs [] = []
+--redAux3 (x:xs) (y:ys) = [redAux x y] ++ (redAux2 x ys) ++ (redAux3 xs ys)
 
---
-uneSoluciones :: Solucion -> Solucion -> Solucion
-uneSoluciones (xs,ys) (xz,yz) = (xs, (ys ++ yz))
+--Auxiliar
+--uneSoluciones :: Solucion -> Solucion -> Solucion
+--uneSoluciones (xs,ys) (xz,yz) = (xs, (ys ++ yz))
+----------------------------------------------------------------------------------------------------------------------
+
+--Auxiliar. Elimina una literal de una clausula.
+elimLiteral :: Literal -> Clausula -> Clausula
+elimLiteral p [] = []
+elimLiteral p (x:xs) = if p == x then elimLiteral p xs else [x] ++ (elimLiteral p xs) 
+
+--Auxiliar para red. Dada una literal y una fórmula, quita la contraria de la literal de todas las
+--clausulas de la fórmula.
+redAux :: Literal -> [Clausula] -> [Clausula]
+redAux p [] = []
+redAux p (x:xs) = if ((length x) > 1) && (esta (simplificaNeg(PNeg p)) x) then [elimLiteral (simplificaNeg(PNeg p)) x] ++ (redAux p xs) else [x] ++ (redAux p xs)
 
 -- 5. red. Función que aplica la regla de reducción.
 red :: Solucion -> Solucion
 red (m, []) = (m,[])
 red ([], ys) = ([], ys)
-red (x:xs, ys) = (x:xs, redAux3 (x:xs) ys)
+red (x:xs, ys) = (x:xs, redAux x ys)
 
 -- 6. split. Función que aplica la regla de la partición de una literal.
 --            Se debe tomar la primer literal que aparezca en la fórmula.
 split :: Solucion -> [Solucion]
 split (m, f) = error "Sin implementar."
-
---
-vacia :: Clausula -> Bool
-vacia [] = True
-vacia xs = False
-
---
-clausulaVacia :: [Clausula] -> Bool
-clausulaVacia [] = False 
-clausulaVacia [[]] = True
 
 -- 7. conflict. Función que determina si la Solucion llegó a una contradicción.
 conflict :: Solucion -> Bool
