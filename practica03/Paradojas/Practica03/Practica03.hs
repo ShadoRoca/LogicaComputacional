@@ -17,7 +17,14 @@ fnn p = simplificaNeg(elimImpl(elimEquiv p))
 -- 2. fnc. Función que devuelve la Forma Normal Conjuntiva de una 
 --         proposición.
 fnc :: Prop -> Prop
-fnc p = error "Sin implementar."
+fnc p = distrDNF (fnn p)
+
+--Auxiliar, función que distribuye disyunciones de una fórmula
+distrDNF:: Prop -> Prop
+distrDNF (POr (PAnd a b) c) = distrDNF (PAnd (POr (distrDNF a) (distrDNF c)) (POr (distrDNF b) (distrDNF c)))
+distrDNF (POr c (PAnd a b)) = distrDNF (PAnd (POr (distrDNF c) (distrDNF a)) (POr (distrDNF c) (distrDNF b)))
+distrDNF (PAnd a b) = (PAnd (distrDNF a) (distrDNF b))
+distrDNF f = f
 
 {----- Algoritmo DPLL -----}
 
@@ -39,7 +46,14 @@ unit (m, ((x:xs):ys)) = if length (x:xs) == 1 then (aConjunto([x] ++ m), ys) els
 
 -- 4. elim. Función que aplica la regla de eliminación. 
 elim :: Solucion -> Solucion
-elim (m, f) = error "Sin implementar."
+elim (m, []) = (m,[])
+elim ([], ys) = ([], ys)
+elim ((x:xs), ys) = ((x:xs), elimAux x ys)
+
+--Auxiliar para elim. Función que dada una literal y una fórmula elimina las clausulas donde aparezca esa literal
+elimAux :: Literal -> [Clausula] -> [Clausula]
+elimAux l [] = []
+elimAux l (x:xs) = if((length x > 1) && (esta l x)) then (elimAux l xs) else [x] ++ (elimAux l xs)
 
 -------------------------------------------------------------------------------------------------------------------
 --Auxilar para Red. Elimina una literal de una clausula si contiene la negación de esta.
@@ -92,7 +106,8 @@ red (x:xs, ys) = (x:xs, redAux x ys)
 -- 6. split. Función que aplica la regla de la partición de una literal.
 --            Se debe tomar la primer literal que aparezca en la fórmula.
 split :: Solucion -> [Solucion]
-split (m, f) = error "Sin implementar."
+split (m, []) = [(m,[])]
+split (m, x:xs) = [([head x] ++ m, x:xs), ([simplificaNeg(PNeg(head x))] ++ m, x:xs)]
 
 -- 7. conflict. Función que determina si la Solucion llegó a una contradicción.
 -- Checamos en cada clausula: si la clausula sólo tiene una literal y esta es la negación de la cabeza
@@ -104,7 +119,7 @@ conflict ((x:xs), (y:ys)) = ((length y) == 1) && (esta (simplificaNeg(PNeg x)) y
 
 -- 8. success. Función que determina si la fórmula es satisfacible.
 success :: Solucion -> Bool
-success (m, f) = error "Sin implementar."
+success (m, f) = (f == [])
 
 --9. appDPLL. Función que aplica las reglas anteriores una vez.
 --Primero se aplica unit, despues elim y por ultimo red.
