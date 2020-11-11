@@ -84,12 +84,14 @@ subconj (x:xs) = subconj xs ++ [(x:z) | z <- subconj xs]
 modelos :: Prop -> [Estado]
 modelos p = conjuntoEstados(modelosAux (subconj(vars p)) p)
 
+--Auxiliar. Función que elimina los duplicados es una lista.
 aConjunto :: Eq a => [a] -> [a]
 aConjunto [] = []
 aConjunto (x:xs) = if esta x xs
                    then aConjunto xs
                    else (x:(aConjunto xs))
 
+--Auxiliar. Función que elimina los estados duplicados de una lista de estados.
 conjuntoEstados :: [Estado] -> [Estado]
 conjuntoEstados [] = []
 conjuntoEstados (x:xs) = if contieneEstado x xs
