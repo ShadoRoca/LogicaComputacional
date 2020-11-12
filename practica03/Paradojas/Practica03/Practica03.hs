@@ -55,30 +55,6 @@ elimAux :: Literal -> [Clausula] -> [Clausula]
 elimAux l [] = []
 elimAux l (x:xs) = if((length x > 1) && (esta l x)) then (elimAux l xs) else [x] ++ (elimAux l xs)
 
--------------------------------------------------------------------------------------------------------------------
---Auxilar para Red. Elimina una literal de una clausula si contiene la negación de esta.
---redAux :: Literal -> Clausula -> Clausula
---redAux p [] = []
---redAux p (x:xs) = if x == simplificaNeg(PNeg p) then redAux p xs else ([x] ++ (redAux p xs))
-
---Auxiliar, usamos redAux para eliminar la contraria de una literal de una formula
---redAux2 :: Literal -> [Clausula] -> [Clausula]
---redAux2 x [] = []
---redAux2 x (y:ys) = [redAux x y] ++ (redAux2 x ys)
-
---Auxiliar, se usan nuestros dos auxiliares anteriores para lograr eliminar las contrarias de
--- una lista de literares en una lista de clausulas
---redAux3 :: [Literal] -> [Clausula] -> [Clausula]
---redAux3 [] [] = []
---redAux3 [] ys = []
---redAux3 xs [] = []
---redAux3 (x:xs) (y:ys) = [redAux x y] ++ (redAux2 x ys) ++ (redAux3 xs ys)
-
---Auxiliar
---uneSoluciones :: Solucion -> Solucion -> Solucion
---uneSoluciones (xs,ys) (xz,yz) = (xs, (ys ++ yz))
-----------------------------------------------------------------------------------------------------------------------
-
 --Auxiliar. Elimina una literal de una clausula.
 --Como no queremos una clausula vacia, (conflict no checa si hay clausulas vacias), entonces si la
 --clausula sólo tiene una literal, regresamos la misma clausula 
@@ -126,11 +102,3 @@ success (m, f) = (f == [])
 appDPLL :: Solucion -> Solucion
 appDPLL (m, f) = red (elim (unit((m,f))))
 
-
-
-{-- Puntos Extra --}
-{--
---dpll. Función que aplica el algoritmo DPLL a una fórmula.
-dpll :: Solucion -> Solucion
-dpll (m, f) = error "Sin implementar."
---}
