@@ -38,29 +38,78 @@ instance Show Form where
 
 
 
---alcance. Función que devuelve el alcance de los cuantificadores de
+--1. alcance. Función que devuelve el alcance de los cuantificadores de
 --          una fórmula.
 alcance :: Form -> [(Form, Form)]
-alcance f = error "Sin implementar."
+alcance TrueF = []
+alcance FalseF = []
+alcance (Pr x t) = []
+alcance (All x f) = [((All x NForm), f)] ++ alcance f
+alcance (Ex x f) = [((Ex x NForm), f)] ++ alcance f
+alcance (Neg f) = alcance f
+alcance (Conj f1 f2) = alcance (f1) ++ alcance (f2)
+alcance (Disy f1 f2) = alcance (f1) ++ alcance (f2)
+alcance (Imp f1 f2) = alcance (f1) ++ alcance (f2)
+alcance (Equi f1 f2) = alcance (f1) ++ alcance (f2)
 
---bv. Función que devuelve las variables ligadas de una fórmula.
+--2. bv. Función que devuelve las variables ligadas de una fórmula.
 bv :: Form -> [Nombre]
 bv f = error "Sin implementar."
 
---fv. Función que devuelve las variables libres de una fórmula.
-fv :: Form -> [Nombre]
-fv f = error "Sin implementar."
+--Auxiliar para vars, nos da las variables de un solo termino
+varsAux :: Term -> [Nombre]
+varsAux (V n) = [n]
+varsAux (F f []) = []
+varsAux (F f (x:xs)) = (varsAux x) ++ varsAux (F f (xs))
 
---sustTerm. Función que realiza la sustitución de variables en un término.
+--Auxiliar para vars, nos da las variables de una lista de terminos
+varsAux2 :: [Term] -> [Nombre]
+varsAux2 [] = []
+varsAux2 (x:xs) = (varsAux x) ++ (varsAux2 xs)
+
+--Auxiliar, nos da las variables de una formula
+vars :: Form -> [Nombre]
+vars TrueF = []
+vars FalseF = []
+vars (Pr x t) = varsAux2 t
+vars (Eq t1 t2) = varsAux t1 ++ varsAux t2
+vars (Neg f) = vars f
+vars (Conj f1 f2) = vars f1 ++ vars f2
+vars (Disy f1 f2) = vars f1 ++ vars f2
+vars (Imp f1 f2) = vars f1 ++ vars f2
+vars (Equi f1 f2) = vars f1 ++ vars f2
+vars (All x f) = vars f
+vars (Ex x f) = vars f
+
+--Auxiliar, elimina todas las ocurrencias de un elemento de una lista
+elimina :: Eq a => a -> [a] -> [a]
+elimina x [] = []
+elimina x (y:ys) = if x == y then elimina x ys else [y] ++ (elimina x ys)
+
+--3. fv. Función que devuelve las variables libres de una fórmula.
+fv :: Form -> [Nombre]
+fv TrueF = []
+fv FalseF = []
+fv (Pr x t) = varsAux2 t 
+fv (All x f) = elimina x (fv f)
+fv (Ex x f) = elimina x (fv f)
+fv (Eq t1 t2) = varsAux t1 ++ varsAux t2
+fv (Neg f) = (fv f)
+fv (Conj f1 f2) = fv f1 ++ fv f2
+fv (Disy f1 f2) = fv f1 ++ fv f2
+fv (Imp f1 f2) = fv f1 ++ fv f2
+fv (Equi f1 f2) = fv f1 ++ fv f2
+
+--4. sustTerm. Función que realiza la sustitución de variables en un término.
 sustTerm :: Term -> Subst -> Term
 sustTerm t s = error "Sin implementar."
 
---sustForm. Función que realiza la sustitución de variables en una 
+--5. sustForm. Función que realiza la sustitución de variables en una 
 --          fórmula sin renombramientos.
 sustForm :: Form -> Subst -> Form
 sustForm f s = error "Sin implementar."
 
---alphaEq. Función que dice si dos fórmulas son alpha-equivalentes.
+--6. alphaEq. Función que dice si dos fórmulas son alpha-equivalentes.
 alphaEq :: Form -> Form -> Bool
 alphaEq f1 f2 = error "Sin implementar."
 
