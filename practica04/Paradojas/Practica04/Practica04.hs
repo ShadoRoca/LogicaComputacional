@@ -1,5 +1,8 @@
---
---
+-- *Nombre del equipo: Paradojas*
+--Liprandi Cortes Rodrigo 317275605
+--Tinoco Miguel Laura Itzel 316020189
+-- *Práctica 04*
+
 module Practica04 where
 
 --Definición del tipo de datos para términos.
@@ -54,7 +57,16 @@ alcance (Equi f1 f2) = alcance (f1) ++ alcance (f2)
 
 --2. bv. Función que devuelve las variables ligadas de una fórmula.
 bv :: Form -> [Nombre]
-bv f = error "Sin implementar."
+bv TrueF = []
+bv FalseF = []
+bv (Pr x t) = []
+bv (All x f) = [x] ++ (bv f)
+bv (Ex x f) = [x] ++ (bv f)
+bv (Neg f) = bv f
+bv (Conj f1 f2) = bv (f1) ++ bv (f2)
+bv (Disy f1 f2) = bv (f1) ++ bv (f2)
+bv (Imp f1 f2) = bv (f1) ++ bv (f2)
+bv (Equi f1 f2) = bv (f1) ++ bv (f2)
 
 --Auxiliar para vars, nos da las variables de un solo termino
 varsAux :: Term -> [Nombre]
@@ -126,9 +138,3 @@ alphaEq :: Form -> Form -> Bool
 alphaEq f1 f2 = error "Sin implementar."
 
 
-
-{-- Puntos Extra
-renom :: Form -> Form
-renomConj :: Form -> Form
-sustFormAlpha :: Form -> Subst -> Form
---}
