@@ -102,7 +102,19 @@ fv (Equi f1 f2) = fv f1 ++ fv f2
 
 --4. sustTerm. Función que realiza la sustitución de variables en un término.
 sustTerm :: Term -> Subst -> Term
-sustTerm t s = error "Sin implementar."
+sustTerm (V x) s = sustTerm1 (V x) s
+sustTerm (F x ys) s = (F x (sustTerm2 ys s))
+
+--Auxiliar, aplica sustitucion a un termino de la forma V Nombre
+sustTerm1 :: Term -> Subst -> Term
+sustTerm1 (V n) [] = (V n)
+sustTerm1 (V n) ((x,y):ys) = if n == x then y else sustTerm1 (V n) (ys)
+
+--Auxiliar, aplica sustitucion a una lista de terminos, util para el caso de F Nombre [Term]
+sustTerm2 :: [Term] -> Subst -> [Term]
+sustTerm2 (xs) [] = (xs)
+sustTerm2 [] ys = []
+sustTerm2 (x:xs) (ys) = [sustTerm1 x (ys)] ++ (sustTerm2 xs ys)
 
 --5. sustForm. Función que realiza la sustitución de variables en una 
 --          fórmula sin renombramientos.
