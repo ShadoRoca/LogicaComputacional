@@ -121,6 +121,7 @@ sustTerm (F x ys) s = (F x (sustTerm2 ys s))
 sustTerm1 :: Term -> Subst -> Term
 sustTerm1 (V n) [] = (V n)
 sustTerm1 (V n) ((x,y):ys) = if n == x then y else sustTerm1 (V n) (ys)
+sustTerm1 (F n xs) ys = (F n (sustTerm2 xs ys))
 
 --Auxiliar, aplica sustitucion a una lista de terminos, util para el caso de F Nombre [Term]
 sustTerm2 :: [Term] -> Subst -> [Term]
@@ -128,10 +129,24 @@ sustTerm2 (xs) [] = (xs)
 sustTerm2 [] ys = []
 sustTerm2 (x:xs) (ys) = [sustTerm1 x (ys)] ++ (sustTerm2 xs ys)
 
+--Auxiliar
+--sustNom :: Nombre -> Subst -> Form
+
+
 --5. sustForm. Función que realiza la sustitución de variables en una 
 --          fórmula sin renombramientos.
-sustForm :: Form -> Subst -> Form
-sustForm f s = error "Sin implementar."
+--sustForm :: Form -> Subst -> Form
+--sustForm TrueF  s =  TrueF
+--sustForm FalseF  s = FalseF
+--sustForm (Pr x (y:ys)) s = (Pr x ((sustTerm y s) ++ sustTerm ys s)) 
+--sustForm (All x f) s = 
+--sustForm (Ex x f) s = 
+--sustForm (Eq t1 t2) s = 
+--sustForm (Neg f) s = (fv f)
+--sustForm (Conj f1 f2) s = 
+--sustForm (Disy f1 f2) s = 
+--sustForm (Imp f1 f2) s = 
+--sustForm (Equi f1 f2) s =
 
 --6. alphaEq. Función que dice si dos fórmulas son alpha-equivalentes.
 alphaEq :: Form -> Form -> Bool
