@@ -141,4 +141,42 @@ sustForm (Equi f1 f2) s = (Equi (sustForm f1 s) (sustForm f2 s))
 
 --6. alphaEq. Función que dice si dos fórmulas son alpha-equivalentes.
 alphaEq :: Form -> Form -> Bool
-alphaEq f1 f2 = error "Sin implementar."
+alphaEq f1 f2 = igual (fv f1) (fv f2) && igualForm f1 f2
+
+--Auxiliar que nos dice si dos Form son iguales sin importar el nombre de variables o funciones
+igualForm :: Form -> Form -> Bool
+igualForm TrueF TrueF = True
+igualForm FalseF FalseF = True
+igualForm (Pr x t) (Pr n s)= comp t s
+igualForm (All x f) (All n f2) = igualForm f f2
+igualForm (Ex x f) (Ex n f2) = igualForm f f2
+igualForm (Eq t1 t2) (Eq s1 s2) = igualTerm t1 s1 && igualTerm t2 s2
+igualForm (Neg f) (Neg f2) = igualForm f f2
+igualForm (Conj f1 f2) (Conj s1 s2) = igualForm f1 s1 && igualForm f2 s2
+igualForm (Disy f1 f2) (Disy s1 s2) = igualForm f1 s1 && igualForm f2 s2
+igualForm (Imp f1 f2) (Imp s1 s2) = igualForm f1 s1 && igualForm f2 s2
+igualForm (Equi f1 f2) (Equi s1 s2) = igualForm f1 s1 && igualForm f2 s2
+igualForm f s = False
+
+--Auxiliar que nos dice si dos terminos son iguales sin importar el nombre
+igualTerm :: Term -> Term -> Bool
+igualTerm (V n) (V s) = True
+igualTerm (V n) (F f l) = False
+igualTerm (F f l) (V n)= False
+igualTerm (F f l) (F n s) = comp l s
+
+--Auxiliar que compara los elementos de dos listas uno a uno
+comp :: [Term] -> [Term] -> Bool
+comp [] [] = True
+comp [] l = False
+comp l [] = False
+comp (x:xs) (y:ys) = igualTerm x y && comp xs ys
+
+
+--Auxiliar que nos dice si dos listas son iguales.
+igual :: [Nombre] -> [Nombre] -> Bool
+igual [] [] = True
+igual [] l = False
+igual l [] = False
+igual (x:xs) (y:ys) = length (x:xs) == length (y:ys) && (if x == y then (igual xs ys) else False)
+
