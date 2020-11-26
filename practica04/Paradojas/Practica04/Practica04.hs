@@ -118,6 +118,7 @@ sustTerm (V n) ((x,y):ys) = if n == x then y else sustTerm (V n) (ys)
 sustTerm (F f l) t = let y = map (\x -> sustTerm x t) l
                          in (F f y)
 
+-- Auxiliar para sustForm, aplica sustitución a una lista de términos
 sustTermList :: [Term] -> Subst -> [Term]
 sustTermList [] xs = []
 sustTermList xs [] = xs
