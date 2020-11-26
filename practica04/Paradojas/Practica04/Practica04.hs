@@ -118,24 +118,27 @@ sustTerm (V n) ((x,y):ys) = if n == x then y else sustTerm (V n) (ys)
 sustTerm (F f l) t = let y = map (\x -> sustTerm x t) l
                          in (F f y)
 
+sustTermList :: [Term] -> Subst -> [Term]
+sustTermList [] xs = []
+sustTermList xs [] = xs
+sustTermList (x:xs) (ys) =[sustTerm x ys] ++ (sustTermList xs ys)
 
 --5. sustForm. Función que realiza la sustitución de variables en una 
 --          fórmula sin renombramientos.
---sustForm :: Form -> Subst -> Form
---sustForm TrueF  s =  TrueF
---sustForm FalseF  s = FalseF
---sustForm (Pr x (y:ys)) s = (Pr x ((sustTerm y s) ++ sustTerm ys s)) 
---sustForm (All x f) s = 
---sustForm (Ex x f) s = 
---sustForm (Eq t1 t2) s = 
---sustForm (Neg f) s = (fv f)
---sustForm (Conj f1 f2) s = 
---sustForm (Disy f1 f2) s = 
---sustForm (Imp f1 f2) s = 
---sustForm (Equi f1 f2) s =
+sustForm :: Form -> Subst -> Form
+sustForm (f) [] = f
+sustForm TrueF  s =  TrueF
+sustForm FalseF  s = FalseF
+sustForm (Pr x (y:ys)) s = (Pr x ([sustTerm y s] ++ (sustTermList ys s))) 
+sustForm (All x f) s =  (All x (sustForm f s))
+sustForm (Ex x f) s = (Ex x (sustForm f s))
+sustForm (Eq t1 t2) s = (Eq (sustTerm t1 s) (sustTerm t2 s))
+sustForm (Neg f) s = (Neg (sustForm f s))
+sustForm (Conj f1 f2) s = (Conj (sustForm f1 s) (sustForm f2 s))
+sustForm (Disy f1 f2) s = (Disy (sustForm f1 s) (sustForm f2 s))
+sustForm (Imp f1 f2) s = (Imp (sustForm f1 s) (sustForm f2 s))
+sustForm (Equi f1 f2) s = (Equi (sustForm f1 s) (sustForm f2 s))
 
 --6. alphaEq. Función que dice si dos fórmulas son alpha-equivalentes.
 alphaEq :: Form -> Form -> Bool
 alphaEq f1 f2 = error "Sin implementar."
-
-
