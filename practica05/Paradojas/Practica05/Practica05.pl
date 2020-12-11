@@ -1,5 +1,8 @@
 /*
-
+*Nombre del equipo: Paradojas*
+--Liprandi Cortes Rodrigo 317275605
+--Tinoco Miguel Laura Itzel 316020189
+-- *Práctica 04*
 */
 
 %1.- Relación elemento, nos dice si un elemento está en una lista
@@ -7,8 +10,12 @@
 elemento(E,[E|_]).
 elemento(E,[_|L]) :- elemento(E,L).
 
-%2.
+%2. -Relación suma, nos devuelve la suma de los elementos de una lista
 
+suma([], 0).
+suma([X|Xs], S):- 
+	suma(Xs, S2),
+	S is S2 + X.
 
 
 %3.- Relación palindromo.
@@ -25,7 +32,15 @@ reversa([HEAD|T], R) :- reversa(T,L), concatena(HEAD,L,R).
 %Checa que la reversa de la lista sea igual a la lista.
 palindromo(L,R) :- reversa(L,R).
 
-%4.-
+%4.- Relación ocurrir, devuelve el numero de ocurrencias de un elemento en una lista
+
+ocurrir([], _E, 0).
+ocurrir([X|Xs], E, N):-
+	X == E, !, ocurrir(Xs, E, N1),
+	N is N1 + 1.
+	
+% si E es diferente de X
+ocurrir([_X|Xs], E, N):- ocurrir(Xs, E, N).
 
 %5.- Implementa cada una de las propiedades de relaciones de equivalencia sobre el mundo de los gatos.
 
@@ -49,7 +64,22 @@ amigos(X,Y) :- gato(X), gato(Y), son_amigos(X,Y) ; son_amigos(Y,X). %checamos si
 %transitividad
 masgrande(X,Y) :- gato(X), gato(Y), es_masgrande(X,Y) ; es_masgrande(X,Z) , es_masgrande(Z,Y). %checamos si x es mas grande que y o si x es mas grande que alguien y si ese alguien es mas chico que x
 
-%6.
+%6.- Relación in_order que devuelve una lista con el recorrido in-order de un árbol binario
+%Definimos la relación árbol binario
+%arbol vacio = null
+arbolB(null).
+arbolB(nodo(Iz, _R, Dr)) :- arbolB(Iz), arbolB(Dr).
+
+%Definimos la relación concatenaL la cual concatena dos listas.
+concatenaL([],Ys,Ys).
+concatenaL([X|Xs],Ys,[X|Zs]) :- concatenaL(Xs,Ys,Zs).
+
+in_order(null,[]).
+in_order(nodo(I,R,D), IRD):- 
+		in_order(I, Ini),
+		in_order(D, Ind),
+		concatenaL(Ini, [R|Ind], IRD).
+
 
 %7.- Implementa los hechos que representen a cada integrante y las reglas familiares necesarias para poder preguntar por
 %    la relacion ’abuelo’.
