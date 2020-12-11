@@ -30,7 +30,7 @@ reversa([E],[E]).
 reversa([HEAD|T], R) :- reversa(T,L), concatena(HEAD,L,R).
 
 %Checa que la reversa de la lista sea igual a la lista.
-palindromo(L,R) :- reversa(L,R).
+palindromo(L) :- reversa(L,L).
 
 %4.- Relación ocurrir, devuelve el numero de ocurrencias de un elemento en una lista
 
