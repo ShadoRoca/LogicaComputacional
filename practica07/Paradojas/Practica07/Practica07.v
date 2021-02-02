@@ -136,10 +136,25 @@ rewrite Inv.
 trivial.
 Qed.
 
+(*2*)
+Theorem inverso_de_inverso: forall x:G, h(h(x)) = x.
+Proof.
+intros.
+apply (Cancel) with (h(x)).
+rewrite InvDer.
+rewrite Inv.
+reflexivity.
+Qed.
+
+
 (*3*)
 Theorem Inverso_operacion_binaria: forall x y:G, h(g x y) = g (h x) (h y).
 Proof.
-    
+intros.
+apply (Cancel) with (g x y).
+rewrite Asoc.
+rewrite <- Asoc.
+rewrite Inv with ((h (g x y))).
 Qed.
 
 
