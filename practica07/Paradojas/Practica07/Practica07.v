@@ -136,7 +136,7 @@ rewrite Inv.
 trivial.
 Qed.
 
-(*2*)
+(*-------2-------*)
 Theorem inverso_de_inverso: forall x:G, h(h(x)) = x.
 Proof.
 intros.
@@ -147,20 +147,20 @@ reflexivity.
 Qed.
 
 
-(*3*)
-Theorem Inverso_operacion_binaria: forall x y:G, h(g x y) = g (h x) (h y).
+
+(*-------3-------*)
+Theorem inverso_operacion_binaria: forall x y:G, h(g x y) = g (h y) (h x).
 Proof.
 intros.
 apply (Cancel) with (g x y).
+rewrite InvDer with (g x y).
 rewrite Asoc.
-rewrite <- Asoc.
-rewrite Inv with ((h (g x y))).
+rewrite <- Asoc with x y (h y).
+rewrite InvDer.
+rewrite NeutroDer with x.
+rewrite InvDer.
+reflexivity.
 Qed.
-
-
-
-(*Theorem UnicInv: forall z x:G, g z x = e -> x = h z.
-Proof.*)
 
 Require Import Classical.
 
