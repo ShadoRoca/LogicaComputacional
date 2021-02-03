@@ -166,6 +166,10 @@ Require Import Classical.
 
 Section LogicaProposicional.
 
+(*Auxiliares equivalencia de la doble negacion*)
+Hypothesis DobleNeg : forall p:Prop, (¬ ¬ p) = p.
+Hypothesis DobleNegInv : forall p: Prop, (¬ ¬ p) -> p.
+
 Theorem ModusTollens: forall p q: Prop,  (~p -> ~q) /\ q -> p.
 Proof.
 intros p q H.
@@ -177,6 +181,20 @@ destruct (classic p).
   -- assumption.
 Qed.
 
+(*Auxiliar Modus Tollens sin la negacion de p y q en las hipotesis *)
+Theorem ModusTollensInv: forall p q: Prop,  (p -> q) /\ ¬q -> ¬p.
+Proof.
+intros p q H.
+destruct H.
+destruct (classic (¬p)).
+assumption.
+absurd (¬q).
+rewrite DobleNeg.
+apply H.
+apply DobleNegInv.
+assumption.
+assumption.
+Qed.
 
 Theorem ModusPonens: forall P Q: Prop,  (P -> Q) /\ P -> Q.
 Proof.
@@ -208,8 +226,19 @@ Lemma MT: forall P Q: Prop, (P -> Q) /\ ~Q -> ~P.
 Proof.
 intuition.
 Qed.
-    
 
+(*-------4-------*)
+Theorem ejercicio4: forall p q r s t u: Prop, (p -> q /\ r) -> (r \/ ¬q -> s /\ t) -> (t <-> u) -> (p -> u).
+Proof.
+intros.
+apply H1.
+apply H0.
+left.
+apply H.
+assumption.
+Qed.
+
+(*-------5-------*)
 Theorem ejercicio5: forall P Q R S T: Prop, (P -> Q -> R) /\ (P \/ S) /\ (T -> Q) /\ (~S) -> ~R -> ~T.
 Proof.
 intros.
