@@ -1,3 +1,7 @@
+(*Nombre del equipo: Paradojas*
+--Liprandi Cortes Rodrigo 317275605
+--Tinoco Miguel Laura Itzel 316020189
+-- *Práctica 07**)
 Section Naturales.
 
 (*Definicion de los numeros naturales, la O representa al 0 y S es el constructor sucesor*)
@@ -163,6 +167,7 @@ reflexivity.
 Qed.
 
 Require Import Classical.
+Require Import Coq.Unicode.Utf8_core.
 
 Section LogicaProposicional.
 
@@ -177,12 +182,12 @@ destruct H.
 destruct (classic p).
 - assumption.
 - absurd q.
-  --  apply H. assumption.
-  -- assumption.
+apply H. assumption.
+assumption.
 Qed.
 
 (*Auxiliar Modus Tollens sin la negacion de p y q en las hipotesis *)
-Theorem ModusTollensInv: forall p q: Prop,  (p -> q) /\ ¬q -> ¬p.
+Theorem MT: forall p q: Prop,  (p -> q) /\ ¬q -> ¬p.
 Proof.
 intros p q H.
 destruct H.
@@ -204,6 +209,7 @@ apply H.
 apply H0.
 Qed.
 
+(* Auxiliar silogismo disyuntivo*)
 Lemma sd: forall a b: Prop, (a \/ b) /\ ~b -> a.
 Proof.
   intros a b H.
@@ -211,20 +217,6 @@ Proof.
   induction H.
   exact H. 
   contradiction H0.
-Qed.
-
-(*Lemma transitividad_implicacion: forall p q r: Prop, (p -> q -> r) -> (p -> r).
-Proof.
-    intros.
-    assert (H1 := conj H H0).
-    apply ModusPonens in H1.
-    apply H.
-    assumption.
-    *)
-
-Lemma MT: forall P Q: Prop, (P -> Q) /\ ~Q -> ~P.
-Proof.
-intuition.
 Qed.
 
 (*-------4-------*)
@@ -256,7 +248,7 @@ apply MT in H7.
 assumption. 
 Qed.
 
-
+(*-------Punto Extra-------*)
 Theorem puntoExtra1: forall P Q: Prop, ((P /\ Q) <-> P) -> (Q <-> P \/ Q).
 Proof.
 intros.
