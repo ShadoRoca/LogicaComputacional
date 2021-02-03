@@ -261,5 +261,15 @@ Theorem puntoExtra1: forall P Q: Prop, ((P /\ Q) <-> P) -> (Q <-> P \/ Q).
 Proof.
 intros.
 destruct H.
-intuition.
+split.
+intros.
+right.
+assumption.
+intros.
+destruct H1.
+assert (H2 := conj H0 H1).
+apply ModusPonens in H2.
+destruct H2.
+assumption.
+assumption.
 Qed.
