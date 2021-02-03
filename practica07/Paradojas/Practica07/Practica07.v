@@ -203,7 +203,11 @@ Proof.
     apply H.
     assumption.
     *)
-    
+
+Lemma MT: forall P Q: Prop, (P -> Q) /\ ~Q -> ~P.
+Proof.
+intuition.
+Qed.
     
 
 Theorem ejercicio5: forall P Q R S T: Prop, (P -> Q -> R) /\ (P \/ S) /\ (T -> Q) /\ (~S) -> ~R -> ~T.
@@ -214,6 +218,13 @@ destruct H1.
 destruct H2.
 assert (H4 := conj H1 H3).
 apply sd in H4.
+assert (H5 := conj H H4).
+apply ModusPonens in H5.
+assert (H6 := conj H5 H0).
+apply MT in H6.
+assert (H7 := conj H2 H6).
+apply MT in H7.
+assumption. 
 Qed.
 
 
