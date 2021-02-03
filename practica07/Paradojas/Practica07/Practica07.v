@@ -185,3 +185,41 @@ destruct H.
 apply H.
 apply H0.
 Qed.
+
+Lemma sd: forall a b: Prop, (a \/ b) /\ ~b -> a.
+Proof.
+  intros a b H.
+  induction H.
+  induction H.
+  exact H. 
+  contradiction H0.
+Qed.
+
+(*Lemma transitividad_implicacion: forall p q r: Prop, (p -> q -> r) -> (p -> r).
+Proof.
+    intros.
+    assert (H1 := conj H H0).
+    apply ModusPonens in H1.
+    apply H.
+    assumption.
+    *)
+    
+    
+
+Theorem ejercicio5: forall P Q R S T: Prop, (P -> Q -> R) /\ (P \/ S) /\ (T -> Q) /\ (~S) -> ~R -> ~T.
+Proof.
+intros.
+destruct H.
+destruct H1.
+destruct H2.
+assert (H4 := conj H1 H3).
+apply sd in H4.
+Qed.
+
+
+Theorem puntoExtra1: forall P Q: Prop, ((P /\ Q) <-> P) -> (Q <-> P \/ Q).
+Proof.
+intros.
+destruct H.
+intuition.
+Qed.
